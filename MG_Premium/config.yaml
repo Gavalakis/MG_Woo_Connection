@@ -1,0 +1,198 @@
+# ==================================================================
+#  1. DATABASE section
+# ==================================================================
+db:
+  table: Test_Copy_All_Products      # ← name of the table you’ll query
+  id_col:    id                      # ← unique row identifier
+  uploaded_col: uploaded             # ← 0 = new row, 1 = already pushed
+
+# ==================================================================
+#  2. 1-to-1 COLUMN → WOO FIELD map
+#     db_column : woo_json_key
+# ==================================================================
+field_map:
+  b_StyleName   : name
+  StyleDescr    : description
+  RP            : regular_price
+  #barcode       : meta:_barcode
+  Composition1  : meta:composition
+  Care_Instr    : meta:care_instructions
+  # stock_quantity, images, categories, SKU are computed (see below)
+
+# ==================================================================
+#  3. VARIATION / FILTER attributes
+# ==================================================================
+attributes:
+  Size:
+    db_col: b_Size
+    id: 3                 # <<< taxonomy term attribute ID from your Woo GET
+    visible: true
+    variation: true
+  Color:
+    db_col: b_ColorName
+    id: 1
+    visible: false
+    variation: false
+  Brand:
+    db_col: Brand
+    id: 2
+    visible: false
+    variation: false
+  Basic color:
+    db_col: c_P1
+    id: 4
+    visible: false
+    variation: false
+
+# ==================================================================
+#  4. CATEGORIES (breadcrumb built in transform.py)
+# ==================================================================
+categories:
+  breadcrumb_col:             # ← leave blank if you compute it
+
+# ==================================================================
+#  5. IMAGE URL columns (order matters)
+# ==================================================================
+images:
+  - es1_M_SC
+  - es1_im2_SC
+  - es1_im3_SC
+  - es1_im4_SC
+  - es1_im5_SC
+  - es1_im6_SC
+  - es1_im7_SC
+  - es1_im8_SC
+
+# ==================================================================
+#  6. COMPUTED fields handled by transform.py helpers
+# ==================================================================
+computed:
+  sku               : same_as_parent_key
+  stock_quantity    : calculate_safe_stock
+  categories        : build_categories
+  images            : build_images_url
+  meta_data         : build_basic_color_meta  # returns weighted colour meta or can add other meta data too
+
+
+# ==================================================================
+# 7. FILTERS: drive brand whitelist from YAML
+# ==================================================================
+filters:
+  allowed_brands:
+    - Wolford
+    - Hanro
+    - Empreinte
+    - Spanx
+    - Bye Bra
+    - Cosabella
+
+# ==================================================================
+#  8. COLOUR-ID lookup (Woo taxonomy term IDs)
+# ==================================================================
+color_mapping:
+  Beige        : 404
+  Black        : 89
+  Blue         : 403
+  Brown        : 406
+  Gold         : 407
+  Gray         : 405
+  Green        : 408
+  Multicolor   : 409
+  Orange       : 410
+  Pink         : 401
+  Purple       : 411
+  Red          : 402
+  Silver       : 412
+  Transparent  : 413
+  White        : 98
+  Yellow       : 414
+  Nude         : 400
+
+# ==================================================================
+#  9. CATEGORY-ID lookup (Woo taxonomy term IDs)
+# ==================================================================
+categories:
+  breadcrumb_col: breadcrumb
+  id_map:
+    TEST01 > Child01: 425
+    TEST01: 424
+    Swimwear > 1 Piece: 151
+    Men's Corner > Accesories: 166
+    Clothing > Accessories: 148
+    Clothing > Activewear: 144
+    Editorial > Aesthetic Living: 170
+    Clothing > All Clothing: 138
+    Living > All Living: 175
+    Men's Corner > All Men's Corner: 159
+    New In > All New In: 129
+    Sale > All Sale: 182
+    Swimwear > All Swimwear: 150
+    Living > Art Editions: 179
+    Swimwear > Beachwear: 156
+    Swimwear > Bikini Bottoms: 155
+    Swimwear > Bikini Tops: 154
+    Swimwear > Bikinis: 152
+    Intimates > Bodies: 122
+    Living > Body Accessories: 180
+    Clothing > Bodysuits: 139
+    Intimates > Braless Solutions: 124
+    BRANDS: 395
+    Editorial > Bride To Be: 169
+    Intimates > Camisoles & Chemises: 397
+    Clothing: 137
+    Sale > Clothing: 183
+    New In > Clothing: 131
+    Living > Corporate Gifts: 176
+    Intimates > Cotton Made: 121
+    Clothing > Cover Ups: 145
+    Intimates > D+ Cups: 119
+    Swimwear > D+ Cups: 153
+    Living > Decoration: 177
+    Clothing > Dresses: 142
+    Editorial: 167
+    New In > Editorial: 135
+    BRANDS > Empreinte: 398
+    Editorial > ETRO X Wolford: 168
+    BRANDS > Hanro: 396
+    Men's Corner > Home & Office: 165
+    New In > Intimates: 132
+    Sale > Intimates: 184
+    Men's Corner > Leisure: 163
+    New In > Limited Edition: 130
+    Living: 174
+    New In > Men's Corner: 134
+    Men's Corner: 158
+    Sale > Men's Corner: 186
+    New In: 128
+    Men's Corner > Nightwear: 162
+    Sale > Outlet: 188
+    Intimates > Panties: 120
+    Sale: 181
+    New In > Sale: 136
+    Swimwear > Sandals: 157
+    Editorial > Sculpt and Shape: 173
+    Sale > Seasonal Picks: 187
+    Intimates > Shape & Control: 123
+    Clothing > Shorts & Skirts: 143
+    Intimates > Sleep & Lounge: 125
+    Intimates > Slippers: 127
+    Clothing > Socks: 147
+    Men's Corner > Socks: 161
+    Editorial > Spring Renewal: 172
+    Men's Corner > Swim: 164
+    New In > Swimwear: 133
+    Sale > Swimwear: 185
+    Swimwear: 149
+    Living > Table Aceessories: 178
+    Intimates > The Silk Edit: 126
+    Clothing > Tights: 146
+    Clothing > Tops: 140
+    Clothing > Trousers & Leggings: 141
+    Men's Corner > Underwear: 160
+    BRANDS > Wolford: 399
+    Editorial > Work Out Essentials: 171
+    clothes: 91
+    Intimates: 116
+    Intimates > All Intimates: 117
+    Intimates > Bras: 118
+    Tights: 20

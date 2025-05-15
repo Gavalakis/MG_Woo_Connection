@@ -1,0 +1,86 @@
+def build_parent_payload(group_rows):
+    first = group_rows[0]
+
+    # 1) Brand whitelist check
+    brand = str(first.get("Brand", "")).strip()
+    brand_norm = brand.lower()
+    if brand_norm not in _allowed_brands:
+        print(f"  ↳ SKIP parent '{concat_style_color(first)}': brand '{brand}' not allowed")
+        return None, None   # skip this entire group
+
+    # 2) Season code check
+    l_sea  = str(first.get("L_Sea", "")).strip()
+    if l_sea not in recent_season_codes():
+        print(f"  ↳ SKIP parent '{concat_style_color(first)}': season '{l_sea}' out of date")
+        return None, None   # skip out-of-season items
+    
+    parent = {"type":"variable"}
+
+    # 1-to-1 mappings
+    for db_col, woo_key in _fmap.items():
+        if woo_key.startswith("meta:"):   # handled later
+            continue
+        parent[woo_key] = str(first.get(db_col,"")).strip()
+
+
+    # ensure we have a parent SKU first (many helpers may need it)
+    parent_sku = concat_style_color(first)
+    parent["sku"] = parent_sku
+
+    # dispatch every computed field named in config.yaml
+    for field_name, helper_name in _computed_map.items():
+        fn = globals().get(helper_name)
+        if not fn:
+            raise KeyError(f"Missing helper for computed field '{field_name}': '{helper_name}'")
+
+        # special case: images helper needs both row+sku
+        if field_name == "images":
+            parent[field_name] = fn(first, parent_sku)
+        else:
+            parent[field_name] = fn(first)
+
+    # attributes
+    parent["attributes"] = []
+    for attr_name, rule in _attr_rules.items():
+        if rule.get("compute_fn") == "all_basic_colors":
+            options = all_basic_colors(first)
+        else:
+            options = sorted({r[rule["db_col"]].strip() for r in group_rows})
+        parent["attributes"].append({
+            "name": attr_name,
+            "visible": bool(rule["visible"]),
+            "variation": bool(rule["variation"]),
+            "options": options
+        })
+
+        # build global‐attribute payloads by ID (so Woo shows pills, not a text blob)
+        parent_attrs = []
+        for attr_name, rule in _attr_rules.items():
+            raw = str(first.get(rule["db_col"], "")).strip()
+            if not raw:
+                continue
+            # split on comma (adjust if your sizes are comma‐separated)
+            options = [o.strip() for o in raw.split(",") if o.strip()]
+            parent_attrs.append({
+                "id":        rule["id"],     # global attribute ID
+                "name":      attr_name,
+                "options":   options,
+                "visible":   bool(rule["visible"]),
+                "variation": bool(rule["variation"])
+            })
+        parent["attributes"] = parent_attrs
+
+        # 2) any 1→1 mappings in config.yaml with prefix “meta:”
+        for db_col, woo_key in _fmap.items():
+            if woo_key.startswith("meta:"):
+                meta_key = woo_key.split("meta:")[1]       # e.g. "composition" or "care_instructions"
+                val     = str(first.get(db_col,"")).strip()
+                if val:
+                    meta_list.append({"key": meta_key, "value": val})
+
+        # 3) basic‐color meta (weights)
+        meta_list += build_basic_color_meta(first)             
+
+        parent["meta_data"] = meta_list
+
+    return parent_sku, parent

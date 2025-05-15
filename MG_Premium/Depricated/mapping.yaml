@@ -1,0 +1,139 @@
+# ------------------------------------------------------------------
+#  WooBridge - database-→-WooCommerce master mapping
+# ------------------------------------------------------------------
+version: 1
+
+database_schema:
+  table: Test_Copy_All_Products      # ← name of the table you’ll query
+  id_col:    id                      # ← unique row identifier
+  columns:
+    # --- identity & bookkeeping ----------
+    id:           {type: int}          # ← NEW external id from ERP
+    uploaded:     {type: bool}         # ← NEW flag to skip already-pushed rows
+    row_id:       {type: int, autoincrement: true}
+
+    # --- style / colour / size ----------
+    b_Style:      {type: string}
+    b_Color:      {type: string}
+    b_Size:       {type: string}
+    b_StyleName:  {type: string}
+    b_ColorName:  {type: string}
+
+    # --- descriptive text ---------------
+    StyleDescr:   {type: string}
+    Composition1: {type: string}
+    Care_Instr:   {type: string}
+
+    # --- hierarchy / attributes ---------
+    Gender:       {type: string}
+    L_Sea:        {type: string}
+    L_1:          {type: string}
+    L_2:          {type: string}
+    L_3:          {type: string}
+    c_L2:         {type: string}
+    Brand:        {type: string}
+    Fit:          {type: string}
+    Cup:          {type: string}
+
+    # --- colours (weighted) -------------
+    c_P1: {type: string}
+    c_P2: {type: string}
+    c_P3: {type: string}
+    c_P4: {type: string}
+    c_P5: {type: string}
+
+    # --- stock columns -------------------
+    MGP_HQ: {type: int}
+    WBM:    {type: int}
+    MGG:    {type: int}
+    MBP:    {type: int}
+    WBK:    {type: int}
+    WBA:    {type: int}
+    WBA_2:  {type: int}
+
+    # --- pricing -------------------------
+    RP: {type: decimal}
+
+    # --- pre-built URLs / images ---------
+    es1_M_SC:  {type: string}
+    es1_im2_SC: {type: string}
+    es1_im3_SC: {type: string}
+    es1_im4_SC: {type: string}
+    es1_im5_SC: {type: string}
+    es1_im6_SC: {type: string}
+    es1_im7_SC: {type: string}
+    es1_im8_SC: {type: string}
+
+    # --- CSV-only fields that Woo doesn’t need ------------
+    breadcrumb:   {type: string, ignore: true}
+    whatever_else_is_in_sheet: {type: string, ignore: true}
+
+# ------------------------------------------------------------------
+#  Transform layer – pure Python executed row-by-row
+# ------------------------------------------------------------------
+transform:
+  requires:
+    - from helpers import (
+        sort_sizes_naturally,
+        calculate_safe_stock,
+        build_categories,
+        color_mapping,
+        return_color_sum
+      )                       # all helpers are already in bridge.py
+  code: |
+    # ‘row’  -> dict for this DB record
+    # ‘emit_parent’, ‘emit_child’ -> helpers provided by loader
+    # Only rows with uploaded == False will be processed
+    if not row.get("uploaded"):
+        # ----------------------------------------------------------------
+        # 1. Parent
+        # ----------------------------------------------------------------
+        sku_parent = f"{row['b_Style'].strip()}-{row['b_Color'].strip()}"
+        parent_payload = {
+            "name":        row["b_StyleName"].strip(),
+            "type":        "variable",
+            "sku":         sku_parent,
+            "description": row["StyleDescr"].strip(),
+            "attributes": [{
+                "name":      "Size",
+                "variation": True,
+                "visible":   True,
+                "options":   sort_sizes_naturally(group['b_Size'])
+            }],
+            "categories":  build_categories(row).split(","),
+            "images": [{
+                "src": url
+            } for url in build_images_url(row, sku_parent).split(",") if url]
+        }
+        parent_id = emit_parent(parent_payload)
+
+        # ----------------------------------------------------------------
+        # 2. Variations (children)
+        # ----------------------------------------------------------------
+        for pos, size in enumerate(sort_sizes_naturally(group['b_Size']), start=1):
+            match = group[group['b_Size'].str.strip() == size].iloc[0]
+            safe_stock = calculate_safe_stock(match)
+            child_payload = {
+                "sku":            f"{sku_parent}-{size}",
+                "regular_price":  match["RP"].strip(),
+                "manage_stock":   True,
+                "stock_quantity": safe_stock,
+                "attributes": [{
+                    "name":  "Size",
+                    "option": size
+                }],
+                "meta_data": [{
+                    "key":   "_barcode",
+                    "value": match.get("Barcode", "")
+                }]
+            }
+            emit_child(parent_id, child_payload)
+
+        # ----------------------------------------------------------------
+        # 3. Mark DB row as uploaded so we don’t push it again
+        # ----------------------------------------------------------------
+        mark_uploaded(row["row_id"])
+
+load_options:
+  batch_size:  50
+  concurrency: 4

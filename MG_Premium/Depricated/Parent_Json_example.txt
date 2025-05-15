@@ -1,0 +1,365 @@
+{
+    "id": 40928,
+    "name": "Individual 20 Tights",
+    "slug": "individual-20-tights",
+    "permalink": "https://magnolia-grace.gr/product/individual-20-tights/",
+    "date_created": "2025-05-09T14:59:06",
+    "date_created_gmt": "2025-05-09T11:59:06",
+    "date_modified": "2025-05-13T11:32:32",
+    "date_modified_gmt": "2025-05-13T08:32:32",
+    "type": "variable",
+    "status": "publish",
+    "featured": false,
+    "catalog_visibility": "visible",
+    "description": "<p><b>Mat look, high flexibility</b><br />These incredibly light, super-soft tights with a sheer matte finish are made with high elasticity for great fit and long-lasting flexibility.</p>\n<p>20 den | Reinforced toe for increased durability | Soft knitted waistband</p>\n",
+    "short_description": "",
+    "sku": "18267-4365",
+    "price": "35",
+    "regular_price": "",
+    "sale_price": "",
+    "date_on_sale_from": null,
+    "date_on_sale_from_gmt": null,
+    "date_on_sale_to": null,
+    "date_on_sale_to_gmt": null,
+    "on_sale": false,
+    "purchasable": true,
+    "total_sales": 0,
+    "virtual": false,
+    "downloadable": false,
+    "downloads": [],
+    "download_limit": 0,
+    "download_expiry": 0,
+    "external_url": "",
+    "button_text": "",
+    "tax_status": "taxable",
+    "tax_class": "",
+    "manage_stock": false,
+    "stock_quantity": null,
+    "backorders": "no",
+    "backorders_allowed": false,
+    "backordered": false,
+    "low_stock_amount": null,
+    "sold_individually": false,
+    "weight": "",
+    "dimensions": {
+        "length": "",
+        "width": "",
+        "height": ""
+    },
+    "shipping_required": true,
+    "shipping_taxable": true,
+    "shipping_class": "",
+    "shipping_class_id": 0,
+    "reviews_allowed": false,
+    "average_rating": "0.00",
+    "rating_count": 0,
+    "upsell_ids": [],
+    "cross_sell_ids": [],
+    "parent_id": 0,
+    "purchase_note": "",
+    "categories": [
+        {
+            "id": 138,
+            "name": "All Clothing",
+            "slug": "all-clothing"
+        },
+        {
+            "id": 129,
+            "name": "All New In",
+            "slug": "all-new-in"
+        },
+        {
+            "id": 395,
+            "name": "BRANDS",
+            "slug": "brands"
+        },
+        {
+            "id": 131,
+            "name": "Clothing",
+            "slug": "clothing-new-in"
+        },
+        {
+            "id": 137,
+            "name": "Clothing",
+            "slug": "clothing"
+        },
+        {
+            "id": 128,
+            "name": "New In",
+            "slug": "new-in"
+        },
+        {
+            "id": 146,
+            "name": "Tights",
+            "slug": "tights-clothing"
+        },
+        {
+            "id": 399,
+            "name": "Wolford",
+            "slug": "wolford"
+        }
+    ],
+    "tags": [],
+    "images": [
+        {
+            "id": 40968,
+            "date_created": "2025-05-09T17:59:15",
+            "date_created_gmt": "2025-05-09T11:59:15",
+            "date_modified": "2025-05-09T17:59:15",
+            "date_modified_gmt": "2025-05-09T11:59:15",
+            "src": "https://magnolia-grace.gr/wp-content/uploads/2025/05/Wolford_Individual_20_Tights_Gobi_1.jpg",
+            "name": "Wolford_Individual_20_Tights_Gobi_1.jpg",
+            "alt": ""
+        },
+        {
+            "id": 40971,
+            "date_created": "2025-05-09T17:59:15",
+            "date_created_gmt": "2025-05-09T11:59:15",
+            "date_modified": "2025-05-09T17:59:15",
+            "date_modified_gmt": "2025-05-09T11:59:15",
+            "src": "https://magnolia-grace.gr/wp-content/uploads/2025/05/Wolford_Individual_20_Tights_Gobi_2.jpg",
+            "name": "Wolford_Individual_20_Tights_Gobi_2.jpg",
+            "alt": ""
+        },
+        {
+            "id": 40973,
+            "date_created": "2025-05-09T17:59:16",
+            "date_created_gmt": "2025-05-09T11:59:16",
+            "date_modified": "2025-05-09T17:59:16",
+            "date_modified_gmt": "2025-05-09T11:59:16",
+            "src": "https://magnolia-grace.gr/wp-content/uploads/2025/05/Wolford_Individual_20_Tights_Gobi_3.jpg",
+            "name": "Wolford_Individual_20_Tights_Gobi_3.jpg",
+            "alt": ""
+        },
+        {
+            "id": 40975,
+            "date_created": "2025-05-09T17:59:16",
+            "date_created_gmt": "2025-05-09T11:59:16",
+            "date_modified": "2025-05-09T17:59:16",
+            "date_modified_gmt": "2025-05-09T11:59:16",
+            "src": "https://magnolia-grace.gr/wp-content/uploads/2025/05/Wolford_Individual_20_Tights_Gobi_4.jpg",
+            "name": "Wolford_Individual_20_Tights_Gobi_4.jpg",
+            "alt": ""
+        },
+        {
+            "id": 40977,
+            "date_created": "2025-05-09T17:59:17",
+            "date_created_gmt": "2025-05-09T11:59:17",
+            "date_modified": "2025-05-09T17:59:17",
+            "date_modified_gmt": "2025-05-09T11:59:17",
+            "src": "https://magnolia-grace.gr/wp-content/uploads/2025/05/Wolford_Individual_20_Tights_Gobi_5.jpg",
+            "name": "Wolford_Individual_20_Tights_Gobi_5.jpg",
+            "alt": ""
+        }
+    ],
+    "attributes": [
+        {
+            "id": 3,
+            "name": "Size",
+            "slug": "pa_size",
+            "position": 0,
+            "visible": true,
+            "variation": true,
+            "options": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL"
+            ]
+        },
+        {
+            "id": 1,
+            "name": "Color",
+            "slug": "pa_color",
+            "position": 1,
+            "visible": false,
+            "variation": false,
+            "options": [
+                "Gobi"
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Brand",
+            "slug": "pa_brand",
+            "position": 2,
+            "visible": false,
+            "variation": false,
+            "options": [
+                "Wolford"
+            ]
+        },
+        {
+            "id": 4,
+            "name": "Basic color",
+            "slug": "pa_basic-color",
+            "position": 3,
+            "visible": false,
+            "variation": false,
+            "options": [
+                "Nude"
+            ]
+        }
+    ],
+    "default_attributes": [],
+    "variations": [
+        40979,
+        40980,
+        40981,
+        40982,
+        40983
+    ],
+    "grouped_products": [],
+    "menu_order": 0,
+    "price_html": "<span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&euro;</span>35.00</bdi></span>",
+    "related_ids": [
+        40926,
+        40777,
+        40779,
+        40927,
+        40776
+    ],
+    "meta_data": [
+        {
+            "id": 231870,
+            "key": "composition",
+            "value": "<ul><li><strong>Primary Composition</strong>: 79% Polyamide, 21% Elastane</li></ul>"
+        },
+        {
+            "id": 231871,
+            "key": "care_instructions",
+            "value": "<ul>\n<li>Machine wash cold gentle</li>\n<li>Do not bleach</li>\n<li>Do not tumble dry</li>\n<li>Line drying</li>\n<li>Do not iron</li>\n<li>Do not dry clean</li>\n</ul>"
+        },
+        {
+            "id": 231872,
+            "key": "composition_1",
+            "value": "<ul><li><strong>Primary Composition</strong>: 79% Polyamide, 21% Elastane</li></ul>"
+        },
+        {
+            "id": 231873,
+            "key": "basic_colors_0_basic_color",
+            "value": "400"
+        },
+        {
+            "id": 231874,
+            "key": "basic_colors_0_percentage",
+            "value": "5"
+        },
+        {
+            "id": 231875,
+            "key": "basic_colors_1_basic_color",
+            "value": "404"
+        },
+        {
+            "id": 231876,
+            "key": "basic_colors_1_percentage",
+            "value": "4"
+        },
+        {
+            "id": 231877,
+            "key": "basic_colors_2_basic_color",
+            "value": ""
+        },
+        {
+            "id": 231878,
+            "key": "basic_colors_2_percentage",
+            "value": "3"
+        },
+        {
+            "id": 231879,
+            "key": "basic_colors_3_basic_color",
+            "value": ""
+        },
+        {
+            "id": 231880,
+            "key": "basic_colors_3_percentage",
+            "value": "2"
+        },
+        {
+            "id": 231881,
+            "key": "basic_colors_4_basic_color",
+            "value": ""
+        },
+        {
+            "id": 231882,
+            "key": "basic_colors_4_percentage",
+            "value": "1"
+        },
+        {
+            "id": 231883,
+            "key": "basic_colors",
+            "value": "2"
+        },
+        {
+            "id": 232144,
+            "key": "_wpml_word_count",
+            "value": "44"
+        },
+        {
+            "id": 232664,
+            "key": "cat_129",
+            "value": "4"
+        },
+        {
+            "id": 232678,
+            "key": "cat_395",
+            "value": "4"
+        },
+        {
+            "id": 232692,
+            "key": "cat_137",
+            "value": "4"
+        },
+        {
+            "id": 232706,
+            "key": "cat_128",
+            "value": "4"
+        },
+        {
+            "id": 232720,
+            "key": "cat_133",
+            "value": "4"
+        },
+        {
+            "id": 232734,
+            "key": "cat_146",
+            "value": "4"
+        },
+        {
+            "id": 232748,
+            "key": "cat_399",
+            "value": "4"
+        },
+        {
+            "id": 232943,
+            "key": "_wp_page_template",
+            "value": "default"
+        }
+    ],
+    "stock_status": "instock",
+    "has_options": true,
+    "post_password": "",
+    "global_unique_id": "",
+    "_links": {
+        "self": [
+            {
+                "href": "https://magnolia-grace.gr/wp-json/wc/v3/products/40928",
+                "targetHints": {
+                    "allow": [
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "PATCH",
+                        "DELETE"
+                    ]
+                }
+            }
+        ],
+        "collection": [
+            {
+                "href": "https://magnolia-grace.gr/wp-json/wc/v3/products"
+            }
+        ]
+    }
+}

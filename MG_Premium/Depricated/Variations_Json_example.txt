@@ -1,0 +1,218 @@
+[
+    {
+        "id": 40983,
+        "type": "variation",
+        "date_created": "2025-05-09T14:59:18",
+        "date_created_gmt": "2025-05-09T11:59:18",
+        "date_modified": "2025-05-09T14:59:18",
+        "date_modified_gmt": "2025-05-09T11:59:18",
+        "description": "",
+        "permalink": "https://magnolia-grace.gr/product/individual-20-tights/?attribute_pa_size=xl",
+        "sku": "18267-4365",
+        "global_unique_id": "",
+        "price": "35",
+        "regular_price": "35",
+        "sale_price": "",
+        "date_on_sale_from": null,
+        "date_on_sale_from_gmt": null,
+        "date_on_sale_to": null,
+        "date_on_sale_to_gmt": null,
+        "on_sale": false,
+        "status": "publish",
+        "purchasable": true,
+        "virtual": false,
+        "downloadable": false,
+        "downloads": [],
+        "download_limit": 0,
+        "download_expiry": 0,
+        "tax_status": "taxable",
+        "tax_class": "",
+        "manage_stock": true,
+        "stock_quantity": 0,
+        "stock_status": "outofstock",
+        "backorders": "no",
+        "backorders_allowed": false,
+        "backordered": false,
+        "low_stock_amount": 3,
+        "weight": "",
+        "dimensions": {
+            "length": "",
+            "width": "",
+            "height": ""
+        },
+        "shipping_class": "",
+        "shipping_class_id": 0,
+        "image": {
+            "id": 40968,
+            "date_created": "2025-05-09T17:59:15",
+            "date_created_gmt": "2025-05-09T11:59:15",
+            "date_modified": "2025-05-09T17:59:15",
+            "date_modified_gmt": "2025-05-09T11:59:15",
+            "src": "https://magnolia-grace.gr/wp-content/uploads/2025/05/Wolford_Individual_20_Tights_Gobi_1.jpg",
+            "name": "Wolford_Individual_20_Tights_Gobi_1.jpg",
+            "alt": ""
+        },
+        "attributes": [
+            {
+                "id": 3,
+                "name": "Size",
+                "slug": "pa_size",
+                "option": "XL"
+            }
+        ],
+        "menu_order": 5,
+        "meta_data": [
+            {
+                "id": 232040,
+                "key": "composition",
+                "value": ""
+            },
+            {
+                "id": 232041,
+                "key": "care_instructions",
+                "value": ""
+            },
+            {
+                "id": 232042,
+                "key": "composition_1",
+                "value": ""
+            },
+            {
+                "id": 232043,
+                "key": "basic_colors_0_basic_color",
+                "value": ""
+            },
+            {
+                "id": 232044,
+                "key": "basic_colors_0_percentage",
+                "value": ""
+            },
+            {
+                "id": 232045,
+                "key": "basic_colors_1_basic_color",
+                "value": ""
+            },
+            {
+                "id": 232046,
+                "key": "basic_colors_1_percentage",
+                "value": ""
+            },
+            {
+                "id": 232047,
+                "key": "basic_colors_2_basic_color",
+                "value": ""
+            },
+            {
+                "id": 232048,
+                "key": "basic_colors_2_percentage",
+                "value": ""
+            },
+            {
+                "id": 232049,
+                "key": "basic_colors_3_basic_color",
+                "value": ""
+            },
+            {
+                "id": 232050,
+                "key": "basic_colors_3_percentage",
+                "value": ""
+            },
+            {
+                "id": 232051,
+                "key": "basic_colors_4_basic_color",
+                "value": ""
+            },
+            {
+                "id": 232052,
+                "key": "basic_colors_4_percentage",
+                "value": ""
+            },
+            {
+                "id": 232053,
+                "key": "basic_colors",
+                "value": ""
+            },
+            {
+                "id": 232166,
+                "key": "_wpml_word_count",
+                "value": "5"
+            }
+        ],
+        "name": "XL",
+        "parent_id": 40928,
+        "_links": {
+            "self": [
+                {
+                    "href": "https://magnolia-grace.gr/wp-json/wc/v3/products/40928/variations/40983",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "https://magnolia-grace.gr/wp-json/wc/v3/products/40928/variations"
+                }
+            ],
+            "up": [
+                {
+                    "href": "https://magnolia-grace.gr/wp-json/wc/v3/products/40928"
+                }
+            ]
+        }
+    },
+    {
+        "id": 40982,
+        "type": "variation",
+        "date_created": "2025-05-09T14:59:18",
+        "date_created_gmt": "2025-05-09T11:59:18",
+        "date_modified": "2025-05-09T14:59:18",
+        "date_modified_gmt": "2025-05-09T11:59:18",
+        "description": "",
+        "permalink": "https://magnolia-grace.gr/product/individual-20-tights/?attribute_pa_size=l",
+        "sku": "18267-4365",
+        "global_unique_id": "",
+        "price": "35",
+        "regular_price": "35",
+        "sale_price": "",
+        "date_on_sale_from": null,
+        "date_on_sale_from_gmt": null,
+        "date_on_sale_to": null,
+        "date_on_sale_to_gmt": null,
+        "on_sale": false,
+        "status": "publish",
+        "purchasable": true,
+        "virtual": false,
+        "downloadable": false,
+        "downloads": [],
+        "download_limit": 0,
+        "download_expiry": 0,
+        "tax_status": "taxable",
+        "tax_class": "",
+        "manage_stock": true,
+        "stock_quantity": 3,
+        "stock_status": "instock",
+        "backorders": "no",
+        "backorders_allowed": false,
+        "backordered": false,
+        "low_stock_amount": 3,
+        "weight": "",
+        "dimensions": {
+            "length": "",
+            "width": "",
+            "height": ""
+        },
+        "shipping_class": "",
+        "shipping_class_id": 0,
+        "image": {
+            "id": 40968,
+            "date_created": "2025-05-09T17:59:15",
+            "date_created_gmt": "2025-05-09T11:59:15",
+            "date_modified": "2025-05-09T17:59:15",
+......
