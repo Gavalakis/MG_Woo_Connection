@@ -1,10 +1,23 @@
 # ==================================================================
+#  0. Woo Api Section
+# ==================================================================
+woo_api:
+  version: "wc/v3"
+  timeout: 20
+
+# ==================================================================
 #  1. DATABASE section
 # ==================================================================
 db:
   table: Test_Copy_All_Products      # ← name of the table you’ll query
   id_col:    id                      # ← unique row identifier
-  uploaded_col: uploaded             # ← 0 = new row, 1 = already pushed
+# new sync‐status table
+  sync_table: eshop_magnolia_sync_status
+  sync_product_ref_col: product_ref_id
+  sync_uploaded_col: uploaded
+  sync_external_id_col: external_id
+  sync_uploaded_date_col: uploaded_date
+  sync_updated_date_col: updated_date
 
 # ==================================================================
 #  2. 1-to-1 COLUMN → WOO FIELD map
@@ -54,14 +67,21 @@ categories:
 #  5. IMAGE URL columns (order matters)
 # ==================================================================
 images:
-  - es1_M_SC
-  - es1_im2_SC
-  - es1_im3_SC
-  - es1_im4_SC
-  - es1_im5_SC
-  - es1_im6_SC
-  - es1_im7_SC
-  - es1_im8_SC
+  base_url: "https://magnolia-grace.gr/wp-content/uploads/productimages"
+
+images:
+  base_url: "https://magnolia-grace.gr/wp-content/uploads/productimages"
+  columns:
+    - es1_M_SC
+    - es1_im2_SC
+    - es1_im3_SC
+    - es1_im4_SC
+    - es1_im5_SC
+    - es1_im6_SC
+    - es1_im7_SC
+    - es1_im8_SC
+  file_ext: ".jpg"
+  skip_empty: true    # (optional, default True)
 
 # ==================================================================
 #  6. COMPUTED fields handled by transform.py helpers
@@ -87,7 +107,58 @@ filters:
     - Cosabella
 
 # ==================================================================
-#  8. COLOUR-ID lookup (Woo taxonomy term IDs)
+# 8.  STOCK-COLUMN list (warehouses) for actual stock calc
+# ==================================================================
+stock_columns:
+  - MGP_HQ
+  - WBM
+  - MGG
+  - MBP
+  - WBK
+  - WBA
+  - WBA_2
+
+# ==================================================================
+#  9. SIZE ORDERING, not important for post functions. dont bother fixing if no need arises.
+# ==================================================================
+
+sizes_order:
+  - xxxs
+  - xxs
+  - xs
+  - s
+  - m
+  - l
+  - xl
+  - xxl
+  - xxxl
+
+cups_order:
+  - A
+  - B
+  - C
+  - D
+  - E
+  - F
+  - G
+  - H
+
+# ==================================================================
+#  10. SEASON LOGIC, used for importing only certain seasons. Auto calculated based on logic.
+# ==================================================================
+season_logic:
+  summer_cutoff:
+    month: 3   # March
+    day: 1
+  winter_cutoff:
+    month: 9   # September
+    day: 1
+  num_recent: 2   # Number of recent seasons considered "recent" (for recent_season_codes). Seasons that are going to be posted on woo based on current date.
+
+  #---------------------------------   ID LOOK UP TABLES   -----------------------------------
+
+# ==================================================================
+#  01. COLOUR-ID lookup (Woo taxonomy term IDs)
 # ==================================================================
 color_mapping:
   Beige        : 404
@@ -109,7 +180,7 @@ color_mapping:
   Nude         : 400
 
 # ==================================================================
-#  9. CATEGORY-ID lookup (Woo taxonomy term IDs)
+#  02. CATEGORY-ID lookup (Woo taxonomy term IDs)
 # ==================================================================
 categories:
   breadcrumb_col: breadcrumb

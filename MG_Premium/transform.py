@@ -12,13 +12,33 @@ _cfg = yaml.safe_load(pathlib.Path("config.yaml").read_text())
 _fmap         = _cfg["field_map"]
 _attr_rules   = _cfg["attributes"]
 _color_map    = _cfg["color_mapping"]
-_img_cols     = _cfg["images"]
 _computed_map = _cfg["computed"]
+
+# Size ordering aliases from config.yaml
+sizes_order = [x.lower() for x in _cfg.get("sizes_order", [])]
+cups_order = [x.upper() for x in _cfg.get("cups_order", [])]
+
+# Images from config.yaml
+_img_cfg = _cfg["images"]
+_img_cols = _img_cfg["columns"]
+base_url = _img_cfg["base_url"]
+file_ext = _img_cfg.get("file_ext", ".jpg")
+skip_empty = _img_cfg.get("skip_empty", True)
+
+# Season logic from config.yaml
+season_cfg = _cfg.get("season_logic", {})
+summer_month = season_cfg.get("summer_cutoff", {}).get("month", 3)
+summer_day   = season_cfg.get("summer_cutoff", {}).get("day", 1)
+winter_month = season_cfg.get("winter_cutoff", {}).get("month", 9)
+winter_day   = season_cfg.get("winter_cutoff", {}).get("day", 1)
+num_recent   = season_cfg.get("num_recent", 2)
 
 # Filters from config.yaml 
 _filters = _cfg.get("filters", {})
 _allowed_brands = {b.strip().lower() for b in _filters.get("allowed_brands", [])}
 
+# List of warehouse columns used to compute actual stock
+_stock_columns = _cfg.get("stock_columns", [])
 
 # -------------------------
 # helper: debugging. Call to return a 0 anywhere you choose.
@@ -41,23 +61,40 @@ def same_as_parent_key(row):
 # -------------------------
 def recent_season_codes():
     """
-    Return a set of the two most recent season codes:
-      - Summer: '<YY>1' for any date ≥ March 1
-      - Winter: '<YY>2' for any date ≥ September 1
+    Return a set of most recent season codes:
+      - the logic is set in config.yaml
     """
     today = datetime.date.today()
     yy    = today.year % 100
-    # Summer season this year if today ≥ March 1, else last year's summer
-    if (today.month, today.day) >= (3,1):
+
+    # Determine current and previous season codes using config
+    # Summer
+    if (today.month, today.day) >= (summer_month, summer_day):
         summer = f"{yy}1"
     else:
         summer = f"{yy-1:02d}1"
-    # Winter season this year if today ≥ Sept 1, else last year's winter
-    if (today.month, today.day) >= (9,1):
+    # Winter
+    if (today.month, today.day) >= (winter_month, winter_day):
         winter = f"{yy}2"
     else:
         winter = f"{yy-1:02d}2"
-    return {summer, winter}
+
+    # Collect most recent N season codes (e.g., {242, 241})
+    seasons = []
+    if num_recent >= 2:
+        seasons.append(winter)
+        seasons.append(summer)
+        # If you want more, go further back:
+        y_prev = (today.year-1) % 100
+        if num_recent > 2:
+            seasons.append(f"{y_prev}2")  # previous winter
+        if num_recent > 3:
+            seasons.append(f"{y_prev}1")  # previous summer
+        # ...extend logic as needed
+    else:
+        seasons = [winter]  # fallback
+
+    return set(seasons[:num_recent])
 
 def current_season_code():
     """
@@ -83,26 +120,36 @@ def size_sort_key(s):
     if m:
         band = int(m.group(1))
         cup  = m.group(2).upper()
-        cup_order = {"A":1,"B":2,"C":3,"D":4,"E":5,"F":6,"G":7,"H":8}
-        return (0, band, cup_order.get(cup, ord(cup[0])))
-    order = {"xxxs":0,"xxs":1,"xs":2,"s":3,"m":4,"l":5,"xl":6,"xxl":7,"xxxl":8}
-    if s_clean in order:
-        return (1, order[s_clean])
+        try:
+            cup_idx = cups_order.index(cup)
+        except ValueError:
+            cup_idx = ord(cup[0]) if cup else 999
+        return (0, band, cup_idx)
+    if s_clean in sizes_order:
+        return (1, sizes_order.index(s_clean))
     return (2, s_clean)
 
 def sort_sizes_naturally(sizes):
     sizes = [s.strip() for s in sizes if s.strip()]
     return sorted(set(sizes), key=size_sort_key)
 
-def calc_actual_stock(row):
-    cols = ["MGP_HQ","WBM","MGG","MBP","WBK","WBA","WBA_2"]
+def calculate_actual_stock(row):
+    """
+    Sums the actual stock from all warehouses defined in config.yaml.
+    """
     total = 0
-    for col in cols:
-        total += int(row.get(col,"0") or 0)
+    for col in _stock_columns:
+        try:
+            # cast to str so ints don’t break .strip()
+            value = str(row.get(col, "")).strip() or "0"
+            total += int(value)
+        except ValueError:
+            # non‐numeric entries count as zero
+            pass
     return total
 
 def calculate_safe_stock(row):
-    actual = calc_actual_stock(row)
+    actual = calculate_actual_stock(row)
     if actual <= 0:      return 0
     if actual <= 5:      return max(0, actual-1)
     if actual <= 10:     return max(0, actual-1)
@@ -115,23 +162,13 @@ def return_color_sum(row):
 # image URL builder
 # -------------------------
 def build_images_url(row, skujoin):
-    """
-    Builds a list of {'src': <url>} objects for the parent product images.
-    Each image URL is:
-      https://magnolia-grace.gr/wp-content/uploads/productimages/[SKU]/[filename].jpg
-    """
-    sku = skujoin
-    base_url = "https://magnolia-grace.gr/wp-content/uploads/productimages"
     urls = []
-    # first image
-    if row.get("es1_M_SC"):
-        urls.append(f"{base_url}/{sku}/{row['es1_M_SC']}.jpg")
-    # additional images es1_im2_SC … es1_im8_SC
-    for i in range(2, 9):
-        col = f"es1_im{i}_SC"
-        if row.get(col):
-            urls.append(f"{base_url}/{sku}/{row[col]}.jpg")
-    # return as list of objects as Woo expects
+    for col in _img_cols:
+        val = row.get(col)
+        if skip_empty and not val:
+            continue
+        # just update YAML or this line to use a format string from config.
+        urls.append(f"{base_url}/{skujoin}/{val}{file_ext}")
     return [{"src": u} for u in urls]
 
 # -------------------------
@@ -509,5 +546,6 @@ def build_parent_and_children(rows):
   for pos, size in enumerate(sizes_sorted, start=1):
       # pick the row that matches this size
       row = next(r for r in rows if r["b_Size"].strip() == size)
-      children_json.append(build_variation_payload(row, parent_sku, pos))
+      variation_payload = build_variation_payload(row, parent_sku, pos)
+      children_json.append((variation_payload, row["id"]))
   return parent_json, children_json
