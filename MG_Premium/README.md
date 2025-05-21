@@ -79,9 +79,14 @@ allowed_brands:    # only these brands are synced
   - BrandA
   - BrandB
 
-recent_seasons:    # newest season codes
-  - '251'
-  - '250'
+season_logic: #Season codes are calculated automatically based on current date and the following logic.
+  summer_cutoff:
+    month: 3   # March
+    day: 1
+  winter_cutoff:
+    month: 9   # September
+    day: 1
+  num_recent: 2 #The number of seasons to be considered as recent.
 
 stock_columns:     # warehouses to sum for total stock
   - MGP_HQ
@@ -93,7 +98,7 @@ force_barcodes_file: barcodes.txt
 
 # --- updater grouping ------------------------------------
 updater:
-  style_col: J_Style         # group by style
+  style_col: J_Style         # group by style. leave empty to turn off.
   size_col:  b_Size          # & size for stock aggregation
 
 # --- Woo attribute IDs -----------------------------------
