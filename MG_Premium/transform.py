@@ -1,6 +1,6 @@
 # transform.py  – turn raw DB rows into Woo JSON
 # -------------------------------------------------
-import yaml, pathlib, re, datetime
+import yaml, pathlib, re, datetime, os
 from collections import defaultdict
 
 # -------------------------
@@ -168,7 +168,8 @@ def build_images_url(row, skujoin):
         if skip_empty and not val:
             continue
         # just update YAML or this line to use a format string from config.
-        urls.append(f"{base_url}/{skujoin}/{val}{file_ext}")
+        #urls.append(f"{base_url}/{skujoin}/{val}{file_ext}")
+        urls.append(f"{base_url}/{val}{file_ext}") #--------------------------------------------FOR TESTING PURPOSES
     return [{"src": u} for u in urls]
 
 # -------------------------
@@ -351,6 +352,19 @@ def build_categories(row) -> str:
     # #Join Categories with (,)
     # return ",".join(categories)        DEPRICATED
 
+    # -------------------------------------------------------
+    # 1)  Add every level-1 'general' category (CLOTHING, SWIMWEAR ...)
+    #     that occurs to the list, if it's not there already.
+    extra_parents = {c.split(">")[0].strip()               # take text before first '>'
+                     for c in categories if ">" in c}      # only crumbs that had a child
+    for parent in extra_parents:
+        if parent and parent not in categories:
+            categories.append(parent)
+
+    # 2)  De-duplicate while preserving the order in which we appended
+    categories = list(dict.fromkeys(categories))
+    # -------------------------------------------------------
+
     # -- Normalize the config id_map and look up each crumb --
     bc_cfg = _cfg["categories"]
     id_map = bc_cfg.get("id_map", {})
@@ -418,17 +432,21 @@ def build_parent_payload(group_rows):
   return (parent_sku, parent_payload_dict) or (None, None) to skip.
   """
   first = group_rows[0]
+  force_mode = os.getenv("FORCE_UPLOAD") == "1"
+
   # --- 1) Brand whitelist check ------------------------------------------
-  brand = str(first.get("Brand", "")).strip()
-  if brand.lower() not in _allowed_brands:
-      print(f"  ↳ SKIP parent '{concat_style_color(first)}': brand '{brand}' not allowed")
-      return None, None
+  if not force_mode:
+    brand = str(first.get("Brand", "")).strip()
+    if brand.lower() not in _allowed_brands:
+        print(f"  ↳ SKIP parent '{concat_style_color(first)}': brand '{brand}' not allowed")
+        return None, None
 
   # --- 2) Season code check ----------------------------------------------
-  l_sea = str(first.get("L_Sea", "")).strip()
-  if l_sea not in recent_season_codes():
-      print(f"  ↳ SKIP parent '{concat_style_color(first)}': season '{l_sea}' out of date")
-      return None, None
+  if not force_mode:
+    l_sea = str(first.get("L_Sea", "")).strip()
+    if l_sea not in recent_season_codes():
+        print(f"  ↳ SKIP parent '{concat_style_color(first)}': season '{l_sea}' out of date")
+        return None, None
 
   # --- Initialize payload and basic 1:1 field mappings -------------------
   parent = {"type": "variable"}

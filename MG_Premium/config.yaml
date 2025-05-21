@@ -16,8 +16,13 @@ db:
   sync_product_ref_col: product_ref_id
   sync_uploaded_col: uploaded
   sync_external_id_col: external_id
+  sync_parent_id_col  : external_parent_id
   sync_uploaded_date_col: uploaded_date
   sync_updated_date_col: updated_date
+
+updater:
+  style_col:         #leave empty if you dont want to add same J_Styles together as one product.
+  size_col : b_Size
 
 # ==================================================================
 #  2. 1-to-1 COLUMN → WOO FIELD map
@@ -66,8 +71,6 @@ categories:
 # ==================================================================
 #  5. IMAGE URL columns (order matters)
 # ==================================================================
-images:
-  base_url: "https://magnolia-grace.gr/wp-content/uploads/productimages"
 
 images:
   base_url: "https://magnolia-grace.gr/wp-content/uploads/productimages"
@@ -155,7 +158,17 @@ season_logic:
     day: 1
   num_recent: 2   # Number of recent seasons considered "recent" (for recent_season_codes). Seasons that are going to be posted on woo based on current date.
 
-  #---------------------------------   ID LOOK UP TABLES   -----------------------------------
+# ==================================================================
+#  11. OPTIONAL - force-upload specific barcodes
+# ==================================================================
+
+force_barcodes_file: barcodes.txt   # one barcode per line, plain-text
+force_barcodes: []                  # or define them inline as YAML list
+barcode_column:  barcode            # DB column name; defaults to 'barcode'
+
+
+
+#---------------------------------   ID LOOK UP TABLES   -----------------------------------
 
 # ==================================================================
 #  01. COLOUR-ID lookup (Woo taxonomy term IDs)

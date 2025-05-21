@@ -1,16 +1,19 @@
 # woo_api.py
-import os
+import os, yaml, pathlib
 from woocommerce import API
+
+_cfg = yaml.safe_load(pathlib.Path("config.yaml").read_text())
 
 class Woo:
     def __init__(self, debug=False):
-        # 1) Read your keys from ENV
+        woo_cfg = _cfg.get("woo_api", {})
+        # 1) Read your keys from ENV and YAML
         self.wc = API(
             url         = os.getenv("WOO_SITE_URL"),
             consumer_key= os.getenv("WOO_CK"),
             consumer_secret=os.getenv("WOO_CS"),
-            version     = "wc/v3",
-            timeout     = 20
+            version     = woo_cfg.get("version", "wc/v3"),
+            timeout     = woo_cfg.get("timeout", 20)
         )
         self.debug = debug
 

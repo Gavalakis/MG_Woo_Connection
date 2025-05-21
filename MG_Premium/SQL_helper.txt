@@ -1,0 +1,17 @@
+CREATE TABLE `eshop_magnolia_sync_status` (
+  `sync_id`         INT          NOT NULL AUTO_INCREMENT,
+  `product_ref_id`  BIGINT(20)          NOT NULL,    -- FK to Test_Copy_All_Products.id
+  `barcode`         VARCHAR(255) NOT NULL,
+  `uploaded`        TINYINT(1)   NOT NULL DEFAULT 0,  -- 0 = not yet pushed, 1 = pushed
+  `external_id`     INT          NULL,        -- Woo variation ID
+  `external_parent_id`  INT      NULL,        -- Woo parent product ID
+  `uploaded_date`   DATETIME     NULL,        -- when first uploaded
+  `updated_date`    DATETIME     NULL,        -- when last updated
+  PRIMARY KEY (`sync_id`),
+  UNIQUE KEY `ux_product_ref` (`product_ref_id`),
+  KEY `fk_product_idx` (`product_ref_id`),
+  CONSTRAINT `fk_product`
+    FOREIGN KEY (`product_ref_id`)
+    REFERENCES `Test_Copy_All_Products` (`id`)   -- this is id_rec_all
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
