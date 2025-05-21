@@ -49,7 +49,7 @@ Automation saves hours of manual data entry, eliminates human error, and keeps y
 
 ### 4.2 Install Python Libraries
 ```bash
-pip install requests PyYAML python-dotenv mysql-connector-python
+pip install requests PyYAML python-dotenv mysql-connector-python woocomerce
 ```
 
 ### 4.3 Configure
