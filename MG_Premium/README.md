@@ -156,16 +156,15 @@ Confirm WooCommerce user has `read/write` REST permissions.
 ## 8. Technical Requirements
 | Requirement | Version / Notes |
 | ----------- | --------------- |
-| Python | 3.8 + |
+| Python | 3.0 + |
 | WooCommerce | REST API enabled |
 | Database | MySQL / MariaDB |
-| Python libs | `requests`, `PyYAML`, `python-dotenv`, `mysql-connector-python` |
+| Python libs | `requests`, `PyYAML`, `python-dotenv`, `mysql-connector-python`, `woocomerce` |
 
 ---
 
 ## 9. Contact & Contributions
-* **Issues / feature requests:** [GitHub Issues](https://github.com/your‑repo/issues)  
-* **Email:** you@example.com  
+* **Email:** nickgaval13+github@gmail.com.
 
 Contributions are welcome! Fork → create a branch → PR.
 
