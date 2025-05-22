@@ -15,3 +15,30 @@ CREATE TABLE `eshop_magnolia_sync_status` (
     REFERENCES `Test_Copy_All_Products` (`id`)   -- this is id_rec_all
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+
+
+CREATE TABLE [eshop_magnolia_sync_status] (
+    [sync_id]             INT IDENTITY(1,1) NOT NULL,
+    [product_ref_id]      BIGINT            NOT NULL,    -- FK to Test_Copy_All_Products.id
+    [barcode]             VARCHAR(255)      NOT NULL,
+    [uploaded]            BIT               NOT NULL DEFAULT 0,  -- 0 = not yet pushed, 1 = pushed
+    [external_id]         INT               NULL,        -- Woo variation ID
+    [external_parent_id]  INT               NULL,        -- Woo parent product ID
+    [uploaded_date]       DATETIME          NULL,        -- when first uploaded
+    [updated_date]        DATETIME          NULL,        -- when last updated
+
+    CONSTRAINT [PK_eshop_magnolia_sync_status] PRIMARY KEY CLUSTERED ([sync_id]),
+
+    CONSTRAINT [UX_product_ref] UNIQUE ([product_ref_id]),
+
+    CONSTRAINT [FK_product]
+        FOREIGN KEY ([product_ref_id])
+        REFERENCES [Test_Copy_All_Products] ([id])
+        ON DELETE CASCADE
+);
+GO
+
+CREATE INDEX [fk_product_idx] ON [eshop_magnolia_sync_status] ([product_ref_id]);
