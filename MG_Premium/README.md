@@ -159,7 +159,7 @@ Confirm WooCommerce user has `read/write` REST permissions.
 | Python | 3.0 + |
 | WooCommerce | REST API enabled |
 | Database | MySQL / MariaDB |
-| Python libs | `requests`, `PyYAML`, `python-dotenv`, `mysql-connector-python`, `woocomerce` |
+| Python libs | `requests`, `PyYAML`, `python-dotenv`, `mysql-connector-python`, `woocommerce` |
 
 ---
 
