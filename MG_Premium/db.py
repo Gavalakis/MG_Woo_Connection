@@ -1,14 +1,21 @@
 # db.py
 import os, yaml, pathlib, sys
 #choose which connector to use
-import pyod #for SQL SERVER
+import pyodbc #for SQL SERVER
 #import mysql.connector
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
-_cfg = yaml.safe_load(pathlib.Path("config.yaml").read_text())
+# For SQL Server/pyodbc only:
+PH = "?"          # parameter placeholder for pyodbc
+Q  = ("[", "]")   # identifier quotes for SQL Server
+
+def _q(name: str) -> str:
+    return f"{Q[0]}{name}{Q[1]}"
+
+_cfg = yaml.safe_load(pathlib.Path("config.yaml").read_text(encoding="utf-8"))
 
 # Main table config
 MAIN_TABLE    = _cfg["db"]["table"]
@@ -26,8 +33,11 @@ SYNC_UPDATED_DATE     = _cfg["db"]["sync_updated_date_col"]
 STYLE_COL = _cfg.get("updater", {}).get("style_col", "J_Style")
 SIZE_COL  = _cfg.get("updater", {}).get("size_col",  "b_Size")
 STOCK_COLS = _cfg.get("stock_columns", [])
+BARCODE_COL = _cfg["db"].get("barcode_col", "Barcode") 
+
 
 class DB:
+
     def __init__(self):
         try:
             conn_str = (
@@ -39,6 +49,11 @@ class DB:
                 f"TrustServerCertificate=yes;"
             )
             self.conn = pyodbc.connect(conn_str)
+
+            def _q(name: str) -> str:          # helper: quote identifiers once
+                return f"{Q[0]}{name}{Q[1]}"
+
+
         except pyodbc.Error as err:
             print(f"[DB ERROR] Could not connect to the database.")
             print(f"  Host: {os.getenv('DB_HOST')}")
@@ -51,21 +66,30 @@ class DB:
             print(f"[DB ERROR] Unexpected error during DB connection: {ex}")
             sys.exit(1)
 
-    def fetch_new_rows(self):
+    def fetch_new_rows(self, barcodes: set[str] | None = None): 
         """
         Return all rows from the main table where the sync table says uploaded=0.
         """
         try:
             cur = self.conn.cursor()
+            params = []
             sql = (
-                f"SELECT m.* "
-                f"FROM [{MAIN_TABLE}] AS m "
-                f"JOIN [{SYNC_TABLE}] AS s "
-                f"  ON m.[{MAIN_ID_COL}] = s.[{SYNC_REF_COL}] "
-                f"WHERE s.[{SYNC_UPLOADED_COL}] = 0"
+                f"SELECT m.{_q(MAIN_ID_COL)} AS id, m.* "
+                f"FROM {_q(MAIN_TABLE)} AS m "
+                f"JOIN {_q(SYNC_TABLE)} AS s "
+                f"  ON m.{_q(MAIN_ID_COL)} = s.{_q(SYNC_REF_COL)} "
+                f"WHERE s.{_q(SYNC_UPLOADED_COL)} = 0"
             )
+            params: list[str] = []
+
+            if barcodes:                                      # force-barcode mode
+                ph = ", ".join([PH] * len(barcodes))          # '?' or '%s'
+                sql += f" AND TRIM(m.{_q(BARCODE_COL)}) IN ({ph})"
+                params.extend(barcodes)
+
             print(f"[DB] Executing: {sql}")
-            cur.execute(sql)
+            cur = self.conn.cursor()
+            cur.execute(sql, params)                          # param list now matches
             columns = [desc[0] for desc in cur.description]
             rows = [dict(zip(columns, row)) for row in cur.fetchall()]
             cur.close()
@@ -184,5 +208,4 @@ class DB:
         # result is a tuple like (value,)
         total = result[0] if result else 0
         return int(total or 0)
-
 

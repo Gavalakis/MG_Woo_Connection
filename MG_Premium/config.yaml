@@ -8,17 +8,21 @@ woo_api:
 # ==================================================================
 #  1. DATABASE section
 # ==================================================================
+
 db:
-  table: Test_Copy_All_Products      # ← name of the table you’ll query
-  id_col:    id                      # ← unique row identifier
+  table: _All_Parts_With_Stock_Now    #All_Parts_New      # ← name of the table or view you’ll query
+  id_col: ID_REC_ALL_PARTS                      # ← unique row identifier
 # new sync‐status table
-  sync_table: eshop_magnolia_sync_status
+  sync_table: Eshop_Magnolia_All_Parts
   sync_product_ref_col: product_ref_id
   sync_uploaded_col: uploaded
-  sync_external_id_col: external_id
+  sync_external_id_col: external_variation_id
   sync_parent_id_col  : external_parent_id
   sync_uploaded_date_col: uploaded_date
   sync_updated_date_col: updated_date
+  product_name_seo: product_name_seo
+  barcode_col: Barcode
+
 
 updater:
   style_col:         #leave empty if you dont want to add same J_Styles together as one product.
@@ -113,13 +117,15 @@ filters:
 # 8.  STOCK-COLUMN list (warehouses) for actual stock calc
 # ==================================================================
 stock_columns:
-  - MGP_HQ
+  #- MGP_HQ
   - WBM
   - MGG
   - MBP
   - WBK
   - WBA
-  - WBA_2
+  - WBA2
+  - MBV
+  - ES1
 
 # ==================================================================
 #  9. SIZE ORDERING, not important for post functions. dont bother fixing if no need arises.
@@ -164,7 +170,7 @@ season_logic:
 
 force_barcodes_file: barcodes.txt   # one barcode per line, plain-text
 force_barcodes: []                  # or define them inline as YAML list
-barcode_column:  barcode            # DB column name; defaults to 'barcode'
+barcode_column:  Barcode            # DB column name; defaults to 'barcode'
 
 
 
@@ -174,7 +180,7 @@ barcode_column:  barcode            # DB column name; defaults to 'barcode'
 #  01. COLOUR-ID lookup (Woo taxonomy term IDs)
 # ==================================================================
 color_mapping:
-  Beige        : 404
+  Beige        : 404 #woo nude
   Black        : 89
   Blue         : 403
   Brown        : 406

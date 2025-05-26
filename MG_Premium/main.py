@@ -12,22 +12,32 @@ from dotenv import load_dotenv
 from db import DB
 from woo_api import Woo
 from transform import group_rows, build_parent_and_children
+from pathlib import Path
 
 def main():
     env_file = ".env.dev" if os.path.exists(".env.dev") else ".env"
     load_dotenv(env_file)
     print(f"Loaded secrets from {env_file}")
+    
 
     # ------- Read optional barcode list ------------------------------
-    cfg = yaml.safe_load(pathlib.Path("config.yaml").read_text())
-    col_name      = cfg.get("barcode_column", "barcode")
-    barcodes_cfg  = {str(b).strip() for b in cfg.get("force_barcodes", [])}
-    file_path     = cfg.get("force_barcodes_file")
-    if file_path and pathlib.Path(file_path).exists():
-        with open(file_path) as f:
-            barcodes_cfg |= {ln.strip() for ln in f if ln.strip()}
+    cfg = yaml.safe_load(pathlib.Path("config.yaml").read_text(encoding="utf-8"))
+    col_name = cfg.get("barcode_column", "b_Barcode")
 
-    FORCE_BARCODES = {b for b in barcodes_cfg if b}
+    # Gather barcodes from config and file, stripping ALL whitespace
+    barcodes_cfg = {str(b).strip() for b in cfg.get("force_barcodes", [])}
+
+    file_path = cfg.get("force_barcodes_file")
+    if file_path and pathlib.Path(file_path).exists():
+        with open(file_path, encoding="utf-8") as f:
+            for ln in f:
+                ln_clean = ln.strip()
+                if ln_clean:
+                    barcodes_cfg.add(ln_clean)
+
+    # Clean the set: remove blanks and ensure everything is a string with no whitespace
+    FORCE_BARCODES = {str(b).strip() for b in barcodes_cfg if str(b).strip()}
+
     if FORCE_BARCODES:
         os.environ["FORCE_UPLOAD"] = "1"          # let transform.py know
         print(f"📌  Force-upload mode – {len(FORCE_BARCODES)} barcode(s) supplied")
@@ -39,7 +49,7 @@ def main():
     woo = Woo(debug=False)
 
     # 2) Fetch rows needing upload
-    rows = db.fetch_new_rows()
+    rows = db.fetch_new_rows(FORCE_BARCODES)
     if FORCE_BARCODES:                            
         rows = [r for r in rows
                 if str(r.get(col_name, "")).strip() in FORCE_BARCODES]
@@ -77,7 +87,7 @@ def main():
             else:
                 msg = v_resp.get("message", json.dumps(v_resp))
                 print(f"   ✗ Variation {var_sku} failed: {msg}")
-
+        time.sleep(1)
         print("")  # blank line between parents
 
     print("✅ Sync complete.")

@@ -4,7 +4,7 @@ from db import DB
 from woo_api import Woo
 
 # ----- config that we need only once -----
-_cfg = yaml.safe_load(pathlib.Path("config.yaml").read_text())
+_cfg = yaml.safe_load(pathlib.Path("config.yaml").read_text(encoding="utf-8"))
 STOCK_COLUMNS = _cfg.get("stock_columns", [])
 
 # ----- NEW: guard against None -----

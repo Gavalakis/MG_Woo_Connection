@@ -6,7 +6,7 @@ from collections import defaultdict
 # -------------------------
 # load YAML once
 # -------------------------
-_cfg = yaml.safe_load(pathlib.Path("config.yaml").read_text())
+_cfg = yaml.safe_load(pathlib.Path("config.yaml").read_text(encoding="utf-8"))
 
 # Handy aliases from config.yaml
 _fmap         = _cfg["field_map"]
@@ -163,13 +163,17 @@ def return_color_sum(row):
 # -------------------------
 def build_images_url(row, skujoin):
     urls = []
+    brand_col = _fmap.get("Brand", "Brand")
+    brand = str(row.get(brand_col, "")).strip()
     for col in _img_cols:
         val = row.get(col)
         if skip_empty and not val:
             continue
         # just update YAML or this line to use a format string from config.
-        #urls.append(f"{base_url}/{skujoin}/{val}{file_ext}")
-        urls.append(f"{base_url}/{val}{file_ext}") #--------------------------------------------FOR TESTING PURPOSES
+        url = f"{base_url}/{brand}/{skujoin}/{val}{file_ext}"
+        print(f"[build_images_url] {url}")
+        urls.append(url)
+        #urls.append(f"{base_url}/{val}{file_ext}") #--------------------------------------------FOR TESTING PURPOSES
     return [{"src": u} for u in urls]
 
 # -------------------------

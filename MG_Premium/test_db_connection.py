@@ -22,10 +22,14 @@ conn_str = (
     f"DATABASE={DB_NAME};"
     f"UID={DB_USER};"
     f"PWD={DB_PASS};"
+    f"TrustServerCertificate=yes;"
 )
 
+#print("Connection string (without password):")
+#print(conn_str)
+
 try:
-    conn = pyodbc.connect(conn_str, timeout=5)
+    conn = pyodbc.connect(conn_str)
     cursor = conn.cursor()
     cursor.execute("SELECT 1")
     result = cursor.fetchone()

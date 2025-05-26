@@ -2,7 +2,7 @@
 import os, yaml, pathlib
 from woocommerce import API
 
-_cfg = yaml.safe_load(pathlib.Path("config.yaml").read_text())
+_cfg = yaml.safe_load(pathlib.Path("config.yaml").read_text(encoding="utf-8"))
 
 class Woo:
     def __init__(self, debug=False):
